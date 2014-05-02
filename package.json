@@ -1,0 +1,26 @@
+{
+  "name": "origami-metrics",
+  "version": "0.0.1",
+
+  "license": "BSD",
+  "description": "A client for the Financial Times content and search APIs",
+  "main": "./main.js",
+  "dependencies": {
+    "underscore": "latest"
+  },
+  "devDependencies": {
+
+  },
+  "keywords": [
+    "FT",
+    "Financial",
+    "Times",
+    "CAPI",
+    "API",
+    "SAPI"
+  ],
+  "contributors": [{
+      "name": "Arjun Gadhia",
+      "email": "arjun.gadhia@ft.com"
+  }]
+}
