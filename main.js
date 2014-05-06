@@ -34,7 +34,6 @@ OrigamiMetrics.prototype = {
 	createProcess: function(key) {
 		var process = new Process();
 
-
 		if(!this.processes.hasOwnProperty(key)) {
 			this.processes[key] = [];
 		}
@@ -46,20 +45,29 @@ OrigamiMetrics.prototype = {
 		if(!this.data.hasOwnProperty(key)) {
 			this.data[key] = {}
 		}
-		var times = _.pluck(this.processes[key], 'duration');;
-		console.log('proceses', this.processes[key]);
-		console.log('times', times);
+		var times = _.pluck(this.processes[key], 'duration');
 		this.data[key] = stats.getStats(times);
 	},
 
 	get: function() {
-		return { data: this.data, processes: this.processes };
+		var self = this;
+		_.each(this.processes, function(process, key) {
+			self.movingAverage(key);
+		})
+		return { data: this.data};
+	},
+
+	monitor: function() {
+		var self = this;
+		return function(req, res, next) {
+			var thisProcess = self.createProcess(req.route.path);
+			req.on('end', function() {
+				thisProcess.end();
+			})
+			thisProcess.start();
+			next();
+		}
 	}
-}
-
-
-function getVariance(arr, mean) {
-
 }
 
 
