@@ -1,10 +1,8 @@
+'use strict';
+
 var Process = require('./lib/Process.js');
 var stats = require('./lib/stats.js');
 var _ = require('underscore');
-
-var countConfig = {
-	type: 'count'
-}
 
 function OrigamiMetrics() {
 	this.data = {};
@@ -23,7 +21,7 @@ OrigamiMetrics.prototype = {
 				units: units,
 				description: description,
 				since: new Date()
-			}
+			};
 		}
 	},
 
@@ -43,7 +41,7 @@ OrigamiMetrics.prototype = {
 
 	movingAverage: function(key) {
 		if(!this.data.hasOwnProperty(key)) {
-			this.data[key] = {}
+			this.data[key] = {};
 		}
 		var times = _.pluck(this.processes[key], 'duration');
 		this.data[key] = stats.getStats(times);
@@ -53,7 +51,7 @@ OrigamiMetrics.prototype = {
 		var self = this;
 		_.each(this.processes, function(process, key) {
 			self.movingAverage(key);
-		})
+		});
 		return { data: this.data};
 	},
 
@@ -63,12 +61,12 @@ OrigamiMetrics.prototype = {
 			var thisProcess = self.createProcess(req.route.path);
 			req.on('end', function() {
 				thisProcess.end();
-			})
+			});
 			thisProcess.start();
 			next();
-		}
+		};
 	}
-}
+};
 
 
 module.exports = new OrigamiMetrics();

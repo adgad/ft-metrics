@@ -9,7 +9,7 @@
     "underscore": "latest"
   },
   "devDependencies": {
-
+    "grunt-contrib-jshint": "latest"
   },
   "keywords": [
     "FT",
