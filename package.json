@@ -1,7 +1,6 @@
 {
   "name": "origami-metrics",
   "version": "0.0.1",
-
   "license": "BSD",
   "description": "A client for the Financial Times content and search APIs",
   "main": "./main.js",
@@ -9,7 +8,8 @@
     "underscore": "latest"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "latest"
+    "grunt-contrib-jshint": "latest",
+    "grunt-jasmine-node": "^0.2.1"
   },
   "keywords": [
     "FT",
@@ -19,8 +19,10 @@
     "API",
     "SAPI"
   ],
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Arjun Gadhia",
       "email": "arjun.gadhia@ft.com"
-  }]
+    }
+  ]
 }

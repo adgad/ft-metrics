@@ -3,20 +3,35 @@ module.exports = function (grunt) {
   'use strict';
 
   grunt.initConfig({
-    /* JSHINT */
-    /* See http://is.gd/jshintopts for more options */
-    /* This follows the npm style guide at http://is.gd/npmstyle */
     jshint: {
-      all: ['main.js', 'lib/**/*.js', 'test/**/*.js'],
+      all: ['main.js', 'lib/**/*.js'],
       options: {
         jshintrc: true
       }
+    },
+
+    jasmine_node: {
+      options: {
+        forceExit: true,
+        match: '.',
+        matchall: false,
+        extensions: 'js',
+        specNameMatcher: 'spec',
+      },
+      all: ['spec/']
     }
+
+
   });
 
+
   /* LOAD PLUGINS */
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  for (var key in grunt.file.readJSON('package.json').devDependencies) {
+    if (key !== 'grunt' && key.indexOf('grunt') === 0) {
+      grunt.loadNpmTasks(key);
+    }
+  }
 
   /* TARGETS */
-  grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('default', ['jshint', 'jasmine_node']);
 };
