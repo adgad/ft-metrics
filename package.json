@@ -1,8 +1,8 @@
 {
-  "name": "origami-metrics",
+  "name": "ft-metrics",
   "version": "0.0.1",
   "license": "BSD",
-  "description": "A client for the Financial Times content and search APIs",
+  "description": "A node module that includes helper methods/middleware for recording metrics",
   "main": "./main.js",
   "dependencies": {
     "underscore": "latest"
@@ -14,10 +14,7 @@
   "keywords": [
     "FT",
     "Financial",
-    "Times",
-    "CAPI",
-    "API",
-    "SAPI"
+    "Times"
   ],
   "contributors": [
     {

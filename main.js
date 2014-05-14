@@ -4,12 +4,12 @@ var Process = require('./lib/Process.js');
 var stats = require('./lib/stats.js');
 var _ = require('underscore');
 
-function OrigamiMetrics() {
+function FTMetrics() {
 	this.data = {};
 	this.processes = {};
 }
 
-OrigamiMetrics.prototype = {
+FTMetrics.prototype = {
 
 	count: function(key, units, description) {
 		if(this.data[key]) {
@@ -69,4 +69,4 @@ OrigamiMetrics.prototype = {
 };
 
 
-module.exports = new OrigamiMetrics();
+module.exports = new FTMetrics();
