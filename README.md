@@ -1,5 +1,9 @@
 ```
-var ftMetrics = require('ft-metrics');
+var FtMetrics = require('ft-metrics');
+var ftMetrics = new FtMetrics();
+var ftMetrics = new FtMetrics({
+	movingAveragePeriod: 120 * 1000
+});
 
 //count something
 ftMetrics.count('some-key', 'units');

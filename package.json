@@ -1,6 +1,6 @@
 {
   "name": "ft-metrics",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "BSD",
   "description": "A node module that includes helper methods/middleware for recording metrics",
   "main": "./main.js",

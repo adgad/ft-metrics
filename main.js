@@ -4,12 +4,16 @@ var Process = require('./lib/Process.js');
 var stats = require('./lib/stats.js');
 var _ = require('underscore');
 
-function FTMetrics() {
+function FtMetrics(options) {
+	options = options || {};
 	this.data = {};
 	this.processes = {};
+	this.movingAveragePeriod = options.movingAveragePeriod || 60 * 1000;
+
+	setInterval(this.garbageCollect.bind(this), this.movingAveragePeriod);
 }
 
-FTMetrics.prototype = {
+FtMetrics.prototype = {
 
 	count: function(key, units, description) {
 		if(this.data[key]) {
@@ -25,16 +29,32 @@ FTMetrics.prototype = {
 		}
 	},
 
-	resetMovingAverageStats: function() {
-		this.processes = [];
+	garbageCollect: function() {
+		var key;
+		var now = (new Date()).getTime();
+		for(key in this.processes) {
+			if(this.processes.hasOwnProperty(key)) {
+				this.processes[key] = this.filterOnlyRecentProcesses(key, now);
+			}
+		}
 	},
 
+	filterOnlyRecentProcesses: function(key, now) {
+		var period = this.movingAveragePeriod;
+		return _.filter(this.processes[key], function(proc) {
+			if(proc.startTime) {
+				return (now - proc.startTime.getTime()) < period;
+			} else {
+				return false;
+			}
+		});
+	},
 	createProcess: function(key) {
 		var process = new Process();
-
 		if(!this.processes.hasOwnProperty(key)) {
 			this.processes[key] = [];
 		}
+
 		this.processes[key].push(process);
 		return process;
 	},
@@ -69,4 +89,4 @@ FTMetrics.prototype = {
 };
 
 
-module.exports = new FTMetrics();
+module.exports = FtMetrics;

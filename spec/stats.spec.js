@@ -4,10 +4,10 @@ describe('stats', function() {
 
 	it('calculates correctly with nothing passed in', function() {
 		var stats = statistics.getStats([]);
-		expect(stats.mean).toBeUndefined();
-		expect(stats.min).toBeUndefined();
-		expect(stats.max).toBeUndefined();
-		expect(stats.stddev).toBeUndefined();
+		expect(stats.mean).toEqual(null);
+		expect(stats.min).toEqual(null);
+		expect(stats.max).toEqual(null);
+		expect(stats.stddev).toEqual(null);
 	});
 
 	it('calculates correctly with a single value', function() {
