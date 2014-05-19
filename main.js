@@ -75,10 +75,11 @@ FtMetrics.prototype = {
 		return { data: this.data};
 	},
 
-	monitor: function() {
+	monitor: function(key) {
 		var self = this;
 		return function(req, res, next) {
-			var thisProcess = self.createProcess(req.route.path);
+			key = key || req.route.path;
+			var thisProcess = self.createProcess(key);
 			req.on('end', function() {
 				thisProcess.end();
 			});
