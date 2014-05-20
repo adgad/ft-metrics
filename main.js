@@ -4,18 +4,22 @@ var Process = require('./lib/Process.js');
 var stats = require('./lib/stats.js');
 var _ = require('underscore');
 
-function FtMetrics(options) {
-	options = options || {};
+function FtMetrics() {
 	this.data = {};
 	this.processes = {};
-	this.movingAveragePeriod = options.movingAveragePeriod || 60 * 1000;
+	this.movingAveragePeriod = 60 * 1000;
 	setInterval(this.garbageCollect.bind(this), this.movingAveragePeriod);
+	this.endpoint = this.endpoint.bind(this);
 }
 
 FtMetrics.prototype = {
 
+	configure: function(options) {
+		options = options || {};
+		this.movingAveragePeriod = options.movingAveragePeriod || this.movingAveragePeriod;
+	},
 	count: function(key, unit, description) {
-		if(this.data[key] && this.data[key].type === 'count') {
+		if(this.data[key] && this.data[key].type === 'counter') {
 			this.data[key].val += 1;
 		} else {
 			this.data[key] = {
@@ -79,12 +83,16 @@ FtMetrics.prototype = {
 		this.data[key] = stats.getStats(times);
 	},
 
-	get: function() {
+	getJSON: function() {
 		var self = this;
 		_.each(this.processes, function(process, key) {
 			self.movingAverage(key);
 		});
 		return { data: this.data};
+	},
+
+	endpoint: function(req, res) {
+		res.send(this.getJSON());
 	},
 
 	monitor: function(key) {
@@ -102,4 +110,4 @@ FtMetrics.prototype = {
 };
 
 
-module.exports = FtMetrics;
+module.exports = new FtMetrics();

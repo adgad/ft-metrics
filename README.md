@@ -8,15 +8,15 @@ FtMetrics is a node module/express middleware that allows you to simply integrat
 ###Constructing an object
 
 ```javascript
-var FtMetrics = require('ft-metrics');
-var ftMetrics = new FtMetrics();
+var ftMetrics = require('ft-metrics');
 ```
 
 The constructor also accepts an object containing some configuration overrides.
 
 ```javascript
-var ftMetrics = new FtMetrics({
-	movingAveragePeriod: 120 * 1000 // number of milliseconds to compute a moving average over
+var ftMetrics = require('ft-metrics');
+ftMetrics.configure({
+	movingAveragePeriod: 120 * 1000 //milliseconds to keep moving average for, default 1 minute
 });
 ```
 
@@ -67,10 +67,15 @@ process.end();
 
 ###Displaying Metrics
 
-You can get an object representation of all the gathered metrics with the `getJSON` method. This can then be used to expose an `__metrics` route, as per the Origami Spec
+You can get an object representation of all the gathered metrics with the `getJSON` method.
 
 ```javascript
-server.get('/__metrics', function(req, res) {
-  res.send(ftMetrics.getJSON())
+var metrics = ftMetrics.getJSON();
 });
+```
+
+There is also an express method that can be used to handle the `__metrics` endpoint as per the Origami spec.
+
+```javascript
+server.get('/__metrics', ftMetrics.endpoint);
 ```
