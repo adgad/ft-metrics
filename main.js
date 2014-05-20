@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 function FtMetrics() {
 	var defaults = {
-		movingAveragePeriod: 60*1000,
+		movingAveragePeriod: 60,
 		maxSampleSize: 10000
 	};
 	this.reset();
@@ -26,7 +26,7 @@ FtMetrics.prototype = {
 			clearInterval(this.gcInterval);
 		}
 		this.gcInterval = setInterval(this.garbageCollect.bind(this), 
-			this.movingAveragePeriod);
+			this.movingAveragePeriod * 1000);
 
 	},
 	reset: function() {
@@ -74,7 +74,7 @@ FtMetrics.prototype = {
 		var period = this.movingAveragePeriod;
 		return _.filter(this.processes[key], function(proc) {
 			if(proc.startTime) {
-				return (now - proc.startTime.getTime()) < period;
+				return (now - proc.startTime.getTime()) < (period * 1000);
 			} else {
 				return false;
 			}
@@ -97,7 +97,11 @@ FtMetrics.prototype = {
 		if(!this.data.hasOwnProperty(key)) {
 			this.data[key] = {};
 		}
-		var times = _.pluck(this.processes[key], 'duration');
+		var times = _.map(this.processes[key], function(proc) {
+			return proc.duration / 1000;
+		});
+		var data = stats.getStats(times);
+		data.period = this.movingAveragePeriod;
 		this.data[key] = stats.getStats(times);
 	},
 

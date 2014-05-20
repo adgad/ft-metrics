@@ -10,7 +10,7 @@ describe('FTMetrics API', function() {
 
 		expect(ftMetrics.data).toEqual({});
 		expect(ftMetrics.processes).toEqual({});
-		expect(ftMetrics.movingAveragePeriod).toEqual(60000);
+		expect(ftMetrics.movingAveragePeriod).toEqual(60);
 
 	});
 
@@ -57,15 +57,15 @@ describe('FTMetrics API', function() {
 	});
 
 	it('creates and cleans up processes', function(done) {
-		ftMetrics.configure({
-			movingAveragePeriod: 1000,
-		});
+
 		var process;
 		for(var i=0;i<10;i++) {
 			ftMetrics.createProcess('key').start().end();
 		}
 		expect(ftMetrics.processes['key'].length).toEqual(10); 
-
+		ftMetrics.configure({
+			movingAveragePeriod: 1,
+		});
 		setTimeout(function() {
 			ftMetrics.createProcess('key').start().end();
 			expect(ftMetrics.processes['key'].length).toEqual(1);
@@ -76,7 +76,6 @@ describe('FTMetrics API', function() {
 
 	it('caps off the number of processes it allows to measure', function() {
 		ftMetrics.configure({
-			movingAveragePeriod: 1000,
 			maxSampleSize: 3
 		});
 		var process;
