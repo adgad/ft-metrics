@@ -9,22 +9,34 @@ function FtMetrics(options) {
 	this.data = {};
 	this.processes = {};
 	this.movingAveragePeriod = options.movingAveragePeriod || 60 * 1000;
-
 	setInterval(this.garbageCollect.bind(this), this.movingAveragePeriod);
 }
 
 FtMetrics.prototype = {
 
-	count: function(key, units, description) {
-		if(this.data[key]) {
+	count: function(key, unit, description) {
+		if(this.data[key] && this.data[key].type === 'count') {
 			this.data[key].val += 1;
 		} else {
 			this.data[key] = {
-				type: 'count',
+				type: 'counter',
 				val: 1,
-				units: units,
+				unit: unit,
 				description: description,
 				since: new Date()
+			};
+		}
+	},
+
+	setFlag: function(key, value, description) {
+		value = (typeof value === 'undefined') ? true : value;
+		if(this.data[key] && this.data[key].type === 'boolean') {
+			this.data[key].val = value;
+		} else {
+			this.data[key] = {
+				type: 'boolean',
+				val: value,
+				description: description,
 			};
 		}
 	},

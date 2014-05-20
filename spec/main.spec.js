@@ -25,16 +25,32 @@ describe('FTMetrics API', function() {
 	it('logs counts of stuff', function() {
 		var ftMetrics = new FtMetrics();
 		ftMetrics.count('something', 'visits', 'blah description');
-		
 		ftMetrics.count('something');
 		ftMetrics.count('something');
 		ftMetrics.count('something_else');
 
-		expect(ftMetrics.data.something.type).toEqual('count');
+		expect(ftMetrics.data.something.type).toEqual('counter');
 		expect(ftMetrics.data.something.val).toEqual(3);
-		expect(ftMetrics.data.something.units).toEqual('visits');
+		expect(ftMetrics.data.something.unit).toEqual('visits');
 		expect(ftMetrics.data.something.description).toEqual('blah description');
 		expect(ftMetrics.data.something_else.val).toEqual(1);
+	});
+
+	it('logs booleans', function() {
+		var ftMetrics = new FtMetrics();
+		ftMetrics.setFlag('something', true);
+		expect(ftMetrics.data.something.type).toEqual('boolean');
+		expect(ftMetrics.data.something.val).toEqual(true);
+		ftMetrics.setFlag('something', false);
+		expect(ftMetrics.data.something.val).toEqual(false);
+
+		ftMetrics.setFlag('withDescription', false, 'describe the thing');
+		expect(ftMetrics.data.withDescription.type).toEqual('boolean');
+		expect(ftMetrics.data.withDescription.val).toEqual(false);
+
+		ftMetrics.setFlag('justKey');
+		expect(ftMetrics.data.justKey.type).toEqual('boolean');
+		expect(ftMetrics.data.justKey.val).toEqual(true);
 	});
 
 	it('creates and cleans up processes', function(done) {
