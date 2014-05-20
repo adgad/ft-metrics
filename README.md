@@ -5,13 +5,13 @@ FtMetrics is a node module/express middleware that allows you to simply integrat
 
 ##How to use
 
-###Constructing an object
+###Requireing the object
 
 ```javascript
 var ftMetrics = require('ft-metrics');
 ```
 
-The constructor also accepts an object containing some configuration overrides.
+There is also a `configure` method that you can use to override some default settings.
 
 ```javascript
 var ftMetrics = require('ft-metrics');
