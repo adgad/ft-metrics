@@ -71,7 +71,6 @@ You can get an object representation of all the gathered metrics with the `getJS
 
 ```javascript
 var metrics = ftMetrics.getJSON();
-});
 ```
 
 There is also an express method that can be used to handle the `__metrics` endpoint as per the Origami spec.

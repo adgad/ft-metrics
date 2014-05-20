@@ -5,7 +5,7 @@
   "description": "A node module that includes helper methods/middleware for recording metrics",
   "main": "./main.js",
   "dependencies": {
-    "underscore": "latest"
+    "underscore": "~1.6.0"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "latest",
