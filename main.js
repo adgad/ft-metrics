@@ -102,7 +102,7 @@ FtMetrics.prototype = {
 		});
 		var data = stats.getStats(times);
 		data.period = this.movingAveragePeriod;
-		this.data[key] = stats.getStats(times);
+		this.data[key] = data;
 	},
 
 	getJSON: function() {
