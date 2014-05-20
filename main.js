@@ -5,10 +5,14 @@ var stats = require('./lib/stats.js');
 var _ = require('underscore');
 
 function FtMetrics() {
-	this.data = {};
-	this.processes = {};
-	this.movingAveragePeriod = 60 * 1000;
-	setInterval(this.garbageCollect.bind(this), this.movingAveragePeriod);
+	var defaults = {
+		movingAveragePeriod: 60*1000,
+		maxSampleSize: 10000
+	};
+	this.reset();
+
+	this.configure(defaults);
+
 	this.endpoint = this.endpoint.bind(this);
 }
 
@@ -17,6 +21,17 @@ FtMetrics.prototype = {
 	configure: function(options) {
 		options = options || {};
 		this.movingAveragePeriod = options.movingAveragePeriod || this.movingAveragePeriod;
+		this.maxSampleSize = options.maxSampleSize || this.movingAveragePeriod;
+		if(this.gcInterval) {
+			clearInterval(this.gcInterval);
+		}
+		this.gcInterval = setInterval(this.garbageCollect.bind(this), 
+			this.movingAveragePeriod);
+
+	},
+	reset: function() {
+		this.data = {};
+		this.processes = {};
 	},
 	count: function(key, unit, description) {
 		if(this.data[key] && this.data[key].type === 'counter') {
@@ -70,8 +85,11 @@ FtMetrics.prototype = {
 		if(!this.processes.hasOwnProperty(key)) {
 			this.processes[key] = [];
 		}
-
+		if(this.processes[key].length >= this.maxSampleSize) {
+			this.processes[key].shift();
+		}
 		this.processes[key].push(process);
+
 		return process;
 	},
 

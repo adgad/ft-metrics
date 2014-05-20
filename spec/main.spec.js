@@ -1,9 +1,12 @@
-var FtMetrics = require('../main.js');
+var ftMetrics = require('../main.js');
 
 describe('FTMetrics API', function() {
 
+	beforeEach(function() {
+		ftMetrics.reset();
+	});
+
 	it('initialises', function() {
-		var ftMetrics = new FtMetrics();
 
 		expect(ftMetrics.data).toEqual({});
 		expect(ftMetrics.processes).toEqual({});
@@ -11,19 +14,20 @@ describe('FTMetrics API', function() {
 
 	});
 
-	it('initialises with custom options', function() {
-		var ftMetrics = new FtMetrics({
-			movingAveragePeriod: 3
+	it('configure with custom options', function() {
+		ftMetrics.configure({
+			movingAveragePeriod: 3,
+			maxSampleSize: 400
 		});
 
 		expect(ftMetrics.data).toEqual({});
 		expect(ftMetrics.processes).toEqual({});
 		expect(ftMetrics.movingAveragePeriod).toEqual(3);
+		expect(ftMetrics.maxSampleSize).toEqual(400);
 
 	});
 
 	it('logs counts of stuff', function() {
-		var ftMetrics = new FtMetrics();
 		ftMetrics.count('something', 'visits', 'blah description');
 		ftMetrics.count('something');
 		ftMetrics.count('something');
@@ -37,7 +41,6 @@ describe('FTMetrics API', function() {
 	});
 
 	it('logs booleans', function() {
-		var ftMetrics = new FtMetrics();
 		ftMetrics.setFlag('something', true);
 		expect(ftMetrics.data.something.type).toEqual('boolean');
 		expect(ftMetrics.data.something.val).toEqual(true);
@@ -54,8 +57,8 @@ describe('FTMetrics API', function() {
 	});
 
 	it('creates and cleans up processes', function(done) {
-		var ftMetrics = new FtMetrics({
-			movingAveragePeriod: 1000
+		ftMetrics.configure({
+			movingAveragePeriod: 1000,
 		});
 		var process;
 		for(var i=0;i<10;i++) {
@@ -69,6 +72,18 @@ describe('FTMetrics API', function() {
 			done();
 		}, 1200);
 
+	});
+
+	it('caps off the number of processes it allows to measure', function() {
+		ftMetrics.configure({
+			movingAveragePeriod: 1000,
+			maxSampleSize: 3
+		});
+		var process;
+		for(var i=0;i<10;i++) {
+			ftMetrics.createProcess('key').start().end();
+		}
+		expect(ftMetrics.processes['key'].length).toEqual(3); 
 
 	})
 });

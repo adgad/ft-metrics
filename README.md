@@ -16,7 +16,8 @@ The constructor also accepts an object containing some configuration overrides.
 ```javascript
 var ftMetrics = require('ft-metrics');
 ftMetrics.configure({
-	movingAveragePeriod: 120 * 1000 //milliseconds to keep moving average for, default 1 minute
+	movingAveragePeriod: 120 * 1000, //milliseconds to keep moving average for, default 1 minute
+	maxSampleSize: 4000, //limits the number of events to keep track of during a moving average period - defaults to 10000.
 });
 ```
 
